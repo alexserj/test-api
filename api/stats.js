@@ -17,16 +17,12 @@ export default async function handler(req, res) {
     const stats = req.body;
 
     const esResponse = await fetch(
-      `${process.env.ELASTICSEARCH_URL}/camera-stats/_doc`,
+      `https://my-elasticsearch-project-dcdffc.es.us-east-1.aws.elastic.cloud:443/${index}/_doc`,
       {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization':
-            'Basic ' +
-            Buffer.from(
-              process.env.ELASTICSEARCH_USER + ':' + process.env.ELASTICSEARCH_PASSWORD
-            ).toString('base64'),
+          'Authorization': 'WkJWbU01a0I3eWVLN0k2bUI0VEg6Ni02clE0LU9kZGZtTmJycVEwTGxjQQ==',
         },
         body: JSON.stringify(stats),
       }
