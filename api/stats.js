@@ -1,11 +1,14 @@
 export default async function handler(req, res) {
-  // Allow CORS
-  res.setHeader('Access-Control-Allow-Origin', '*'); // or specific domain instead of '*'
+  // ✅ CORS setup
+  res.setHeader(
+    'Access-Control-Allow-Origin',
+    'https://test-lake-chi-94.vercel.app/' // your frontend URL
+  );
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
+  // ✅ Handle preflight OPTIONS request
   if (req.method === 'OPTIONS') {
-    // Preflight request
     return res.status(200).end();
   }
 
