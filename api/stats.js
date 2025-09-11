@@ -1,4 +1,14 @@
 export default async function handler(req, res) {
+  // Allow CORS
+  res.setHeader('Access-Control-Allow-Origin', '*'); // or specific domain instead of '*'
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+  if (req.method === 'OPTIONS') {
+    // Preflight request
+    return res.status(200).end();
+  }
+
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -6,14 +16,17 @@ export default async function handler(req, res) {
   try {
     const stats = req.body;
 
-    // Send to Elasticsearch
     const esResponse = await fetch(
-      `https://my-elasticsearch-project-dcdffc.es.us-east-1.aws.elastic.cloud:443/${index}/_doc`,
+      `${process.env.ELASTICSEARCH_URL}/camera-stats/_doc`,
       {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'WkJWbU01a0I3eWVLN0k2bUI0VEg6Ni02clE0LU9kZGZtTmJycVEwTGxjQQ==',
+          'Authorization':
+            'Basic ' +
+            Buffer.from(
+              process.env.ELASTICSEARCH_USER + ':' + process.env.ELASTICSEARCH_PASSWORD
+            ).toString('base64'),
         },
         body: JSON.stringify(stats),
       }
