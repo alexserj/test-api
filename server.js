@@ -33,10 +33,12 @@ app.post('/stats', async (req, res) => {
           'Content-Type': 'application/json',
           'Authorization': 'WkJWbU01a0I3eWVLN0k2bUI0VEg6Ni02clE0LU9kZGZtTmJycVEwTGxjQQ==',
         },
+        validateStatus: () => true // allow all status codes
       }
     );
+    console.log('Elasticsearch response status:', esResponse.status);
+    console.log('Elasticsearch response data:', esResponse.data);
     res.status(200).json({ success: true, result: esResponse.data });
-    console.log('Pushed to Elasticsearch:', esResponse.data);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Failed to push to Elasticsearch' });
