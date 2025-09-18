@@ -9,8 +9,21 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 app.use(morgan('dev'));
 
+// Support multiple origins via comma-separated env variable
+const allowedOrigins = (process.env.ALLOWED_ORIGIN || '*')
+  .split(',')
+  .map(origin => origin.trim());
+
 app.use(cors({
-  origin: process.env.ALLOWED_ORIGIN || '*',
+  origin: function(origin, callback) {
+    // Allow requests with no origin (like curl or mobile apps)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes('*') || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
