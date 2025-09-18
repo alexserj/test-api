@@ -18,21 +18,31 @@ export default async function handler(req, res) {
 
   try {
     const stats = req.body;
-
+    const esUrl = 'https://my-elasticsearch-project-dcdffc.es.us-east-1.aws.elastic.cloud:443/camera-analytics/_doc';
     const esResponse = await axios.post(
-      `https://my-elasticsearch-project-dcdffc.es.us-east-1.aws.elastic.cloud:443/camera-analytics/_doc`,
-      // `http://localhost:9200/${index}/_doc`,
+      esUrl,
       stats,
       {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'WkJWbU01a0I3eWVLN0k2bUI0VEg6Ni02clE0LU9kZGZtTmJycVEwTGxjQQ==',
         },
+        validateStatus: () => true // allow all status codes
       }
     );
-    res.status(200).json({ success: true, result: esResponse.data });
+    console.log('Elasticsearch response status:', esResponse.status);
+    console.log('Elasticsearch response data:', esResponse.data);
+    if (esResponse.status >= 200 && esResponse.status < 300) {
+      res.status(200).json({ success: true, result: esResponse.data });
+    } else {
+      res.status(esResponse.status).json({ success: false, error: esResponse.data });
+    }
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Failed to push to Elasticsearch' });
+    console.error('Request to Elasticsearch failed:', err);
+    if (err.response) {
+      res.status(err.response.status).json({ error: err.response.data });
+    } else {
+      res.status(500).json({ error: 'Failed to push to Elasticsearch' });
+    }
   }
 }
