@@ -31,7 +31,7 @@ app.post('/stats', async (req, res) => {
       {
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'WkJWbU01a0I3eWVLN0k2bUI0VEg6Ni02clE0LU9kZGZtTmJycVEwTGxjQQ==',
+          'Authorization': 'ApiKey WkJWbU01a0I3eWVLN0k2bUI0VEg6Ni02clE0LU9kZGZtTmJycVEwTGxjQQ==',
         },
         validateStatus: () => true // allow all status codes
       }
