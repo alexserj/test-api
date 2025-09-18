@@ -1,13 +1,13 @@
+const axios = require('axios');
 export default async function handler(req, res) {
-  // ✅ CORS setup
   res.setHeader(
     'Access-Control-Allow-Origin',
     'https://test-lake-chi-94.vercel.app/' // your frontend URL
+    // 'http://localhost:9000'
   );
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
-  // ✅ Handle preflight OPTIONS request
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
@@ -19,20 +19,18 @@ export default async function handler(req, res) {
   try {
     const stats = req.body;
 
-    const esResponse = await fetch(
-      `https://my-elasticsearch-project-dcdffc.es.us-east-1.aws.elastic.cloud:443/${index}/_doc`,
+    const esResponse = await axios.post(
+      `https://my-elasticsearch-project-dcdffc.es.us-east-1.aws.elastic.cloud:443/camera-analytics/_doc`,
+      // `http://localhost:9200/${index}/_doc`,
+      stats,
       {
-        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'WkJWbU01a0I3eWVLN0k2bUI0VEg6Ni02clE0LU9kZGZtTmJycVEwTGxjQQ==',
         },
-        body: JSON.stringify(stats),
       }
     );
-
-    const data = await esResponse.json();
-    res.status(200).json({ success: true, result: data });
+    res.status(200).json({ success: true, result: esResponse.data });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Failed to push to Elasticsearch' });

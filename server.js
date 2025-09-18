@@ -1,10 +1,13 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const fetch = require('node-fetch');
+const axios = require('axios');
+const morgan = require('morgan');
+
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+app.use(morgan('dev'));
 
 app.use(cors({
   origin: process.env.ALLOWED_ORIGIN || '*',
@@ -19,19 +22,21 @@ app.options('/stats', (req, res) => {
 
 app.post('/stats', async (req, res) => {
   const stats = req.body;
-  const index = process.env.ELASTIC_INDEX;
-  const esUrl = `${process.env.ELASTIC_URL}/${index}/_doc`;
+  const index = 'camera-analytics';
+  const esUrl = `https://my-elasticsearch-project-dcdffc.es.us-east-1.aws.elastic.cloud:443/${index}/_doc`;
   try {
-    const esResponse = await fetch(esUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': process.env.ELASTIC_AUTH,
-      },
-      body: JSON.stringify(stats),
-    });
-    const data = await esResponse.json();
-    res.status(200).json({ success: true, result: data });
+    const esResponse = await axios.post(
+      esUrl,
+      stats,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'WkJWbU01a0I3eWVLN0k2bUI0VEg6Ni02clE0LU9kZGZtTmJycVEwTGxjQQ==',
+        },
+      }
+    );
+    res.status(200).json({ success: true, result: esResponse.data });
+    console.log('Pushed to Elasticsearch:', esResponse.data);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Failed to push to Elasticsearch' });
