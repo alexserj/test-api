@@ -2,7 +2,7 @@ const axios = require('axios');
 export default async function handler(req, res) {
   res.setHeader(
     'Access-Control-Allow-Origin',
-    'https://test-lake-chi-94.vercel.app/' // your frontend URL
+    'https://test-lake-chi-94.vercel.app' // your frontend URL
     // 'http://localhost:9000'
   );
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
