@@ -40,8 +40,8 @@ app.options('/stats', (req, res) => {
 
 app.post('/stats', async (req, res) => {
   const stats = req.body;
-  const index = 'camera-analytics';
-  const esUrl = `https://my-elasticsearch-project-dcdffc.es.us-east-1.aws.elastic.cloud:443/${index}/_doc`;
+  const index = process.env.ELASTIC_INDEX;
+  const esUrl = `${process.env.ELASTIC_URL}/${index}/_doc`;
   try {
     const esResponse = await axios.post(
       esUrl,
@@ -49,7 +49,7 @@ app.post('/stats', async (req, res) => {
       {
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'ApiKey WkJWbU01a0I3eWVLN0k2bUI0VEg6Ni02clE0LU9kZGZtTmJycVEwTGxjQQ==',
+          'Authorization': process.env.ELASTIC_AUTH,
         },
         validateStatus: () => true // allow all status codes
       }
