@@ -18,8 +18,8 @@ async function handleUpload(req, res) {
     // Shorten the URL using TinyURL
     let shortUrl = signedUrl;
     try {
-      const tinyResp = await axios.get('https://tinyurl.com/api-create.php', {
-        params: { url: signedUrl },
+      const encodedUrl = encodeURIComponent(signedUrl);
+      const tinyResp = await axios.get(`https://tinyurl.com/api-create.php?url=${encodedUrl}`, {
         timeout: 5000
       });
       if (typeof tinyResp.data === 'string' && tinyResp.data.startsWith('http')) {
