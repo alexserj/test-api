@@ -15,18 +15,18 @@ async function handleUpload(req, res) {
   try {
     const { bucket, filename } = await uploadFileToS3(req.file);
     const signedUrl = await getPresignedUrl(bucket, filename, 3600);
-    // Shorten the URL using TinyURL
+    // Shorten the URL using is.gd
     let shortUrl = signedUrl;
     try {
       const encodedUrl = encodeURIComponent(signedUrl);
-      const tinyResp = await axios.get(`https://tinyurl.com/api-create.php?url=${encodedUrl}`, {
+      const isgdResp = await axios.get(`https://is.gd/create.php?format=simple&url=${encodedUrl}`, {
         timeout: 5000
       });
-      if (typeof tinyResp.data === 'string' && tinyResp.data.startsWith('http')) {
-        shortUrl = tinyResp.data;
+      if (typeof isgdResp.data === 'string' && isgdResp.data.startsWith('http')) {
+        shortUrl = isgdResp.data;
       }
     } catch (shortenErr) {
-      console.error('TinyURL error:', shortenErr.message);
+      console.error('is.gd error:', shortenErr.message);
       // Fallback to original signedUrl
     }
     res.status(200).json({ link: shortUrl });
