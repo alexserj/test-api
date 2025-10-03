@@ -1,9 +1,10 @@
 // Elasticsearch helpers
 const axios = require('axios');
 
-const getElasticsearchUrl = () => {
-  const index = process.env.ELASTIC_INDEX;
-  return `${process.env.ELASTIC_URL}/${index}/_doc`;
+
+const getElasticsearchUrl = (index) => {
+  const idx = index || process.env.ELASTIC_INDEX;
+  return `${process.env.ELASTIC_URL}/${idx}/_doc`;
 };
 
 const elasticsearchHeaders = () => ({
@@ -11,8 +12,9 @@ const elasticsearchHeaders = () => ({
   'Authorization': process.env.ELASTIC_AUTH,
 });
 
-async function pushToElasticsearch(stats) {
-  const esUrl = getElasticsearchUrl();
+
+async function pushToElasticsearch(stats, index) {
+  const esUrl = getElasticsearchUrl(index);
   return axios.post(esUrl, stats, {
     headers: elasticsearchHeaders(),
     validateStatus: () => true,
