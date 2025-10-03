@@ -7,6 +7,24 @@ const axios = require('axios');
 
 const upload = multer({ storage: multer.memoryStorage() });
 
+
+// Helper to shorten URLs using is.gd
+async function shortenUrl(longUrl) {
+  try {
+    const encodedUrl = encodeURIComponent(longUrl);
+    const isgdResp = await axios.get(`https://is.gd/create.php?format=simple&url=${encodedUrl}`, {
+      timeout: 5000
+    });
+    if (typeof isgdResp.data === 'string' && isgdResp.data.startsWith('http')) {
+      return isgdResp.data;
+    }
+    throw new Error('is.gd did not return a valid URL');
+  } catch (err) {
+    console.error('is.gd error:', err.message);
+    return longUrl; // Fallback to original URL
+  }
+}
+
 // /upload controller
 async function handleUpload(req, res) {
   if (!req.file) {
@@ -15,20 +33,7 @@ async function handleUpload(req, res) {
   try {
     const { bucket, filename } = await uploadFileToS3(req.file);
     const signedUrl = await getPresignedUrl(bucket, filename, 3600);
-    // Shorten the URL using is.gd
-    let shortUrl = signedUrl;
-    try {
-      const encodedUrl = encodeURIComponent(signedUrl);
-      const isgdResp = await axios.get(`https://is.gd/create.php?format=simple&url=${encodedUrl}`, {
-        timeout: 5000
-      });
-      if (typeof isgdResp.data === 'string' && isgdResp.data.startsWith('http')) {
-        shortUrl = isgdResp.data;
-      }
-    } catch (shortenErr) {
-      console.error('is.gd error:', shortenErr.message);
-      // Fallback to original signedUrl
-    }
+    const shortUrl = await shortenUrl(signedUrl);
     res.status(200).json({ link: shortUrl });
   } catch (err) {
     console.error('S3 upload error:', err);
