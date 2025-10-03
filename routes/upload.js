@@ -31,8 +31,17 @@ async function handleUpload(req, res) {
     return res.status(400).json({ error: 'No file uploaded' });
   }
   try {
-    const { bucket, filename } = await uploadFileToS3(req.file);
-    const signedUrl = await getPresignedUrl(bucket, filename, 3600);
+    // Determine bucket based on origin
+    const origin = req.get('origin');
+    let bucket = process.env.AWS_S3_BUCKET;
+    if (origin === 'https://test-lake-chi-94.vercel.app' || origin === 'https://test-roan-xi-33.vercel.app') {
+      bucket = 'lense-api-bucket';
+    } else if (origin === 'https://libre-cyan.vercel.app') {
+      bucket = 'lense-api-libre-bucket';
+    }
+
+    const { bucket: usedBucket, filename } = await uploadFileToS3(req.file, bucket);
+    const signedUrl = await getPresignedUrl(usedBucket, filename, 3600);
     const shortUrl = await shortenUrl(signedUrl);
     res.status(200).json({ link: shortUrl });
   } catch (err) {

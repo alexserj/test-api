@@ -11,10 +11,10 @@ const s3 = new S3Client({
   },
 });
 
-async function uploadFileToS3(file) {
+async function uploadFileToS3(file, bucketOverride) {
   const ext = path.extname(file.originalname);
   const filename = `${crypto.randomUUID()}${ext}`;
-  const bucket = process.env.AWS_S3_BUCKET;
+  const bucket = bucketOverride || process.env.AWS_S3_BUCKET;
   await s3.send(new PutObjectCommand({
     Bucket: bucket,
     Key: filename,
