@@ -12,6 +12,8 @@ async function handleStats(req, res) {
       index = 'camera-analytics-staging';
     } else if (origin === 'https://libre-cyan.vercel.app') {
       index = 'libre-analitycs';
+    } else if (origin === 'https://dg-fresh.vercel.app') {
+      index = 'dg-fresh-analitycs';
     }
 
     const esResponse = await pushToElasticsearch(req.body, index);

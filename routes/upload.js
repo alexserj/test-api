@@ -38,6 +38,8 @@ async function handleUpload(req, res) {
       bucket = 'lense-api-bucket';
     } else if (origin === 'https://libre-cyan.vercel.app') {
       bucket = 'lense-api-libre-bucket';
+    } else if (origin === 'https://dg-fresh.vercel.app') {
+      bucket = 'lense-api-dg-fresh-bucket';
     }
 
     const { bucket: usedBucket, filename } = await uploadFileToS3(req.file, bucket);
