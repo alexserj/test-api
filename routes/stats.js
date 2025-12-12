@@ -14,6 +14,8 @@ async function handleStats(req, res) {
       index = 'libre-analitycs';
     } else if (origin === 'https://dg-fresh.vercel.app') {
       index = 'dg-fresh-analitycs';
+    } else if (origin === 'https://dg-bolt.vercel.app') {
+      index = 'dg-bolt-analitycs'
     }
 
     const esResponse = await pushToElasticsearch(req.body, index);
