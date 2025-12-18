@@ -14,7 +14,7 @@ async function handleStats(req, res) {
       index = 'libre-analitycs';
     } else if (origin === 'https://dg-fresh.vercel.app') {
       index = 'dg-fresh-analitycs';
-    } else if (origin === 'https://dg-bolt.vercel.app') {
+    } else if (origin === 'https://dg-bold.vercel.app') {
       index = 'dg-bolt-analitycs'
     }
 
