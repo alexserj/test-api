@@ -42,6 +42,10 @@ async function handleUpload(req, res) {
       bucket = 'lense-api-dg-fresh-bucket';
     } else if (origin === 'https://dg-bold.vercel.app') {
       bucket = 'lense-api-dg-bolt-bucket';
+    } else if (origin === 'https://dg-fresh-mobile.vercel.app') {
+      bucket = 'lense-api-dg-fresh-mobile-bucket';
+    } else if (origin === 'https://dg-bold-mobile.vercel.app') {
+      bucket = 'lense-api-dg-bold-mobile-bucket';
     }
 
     const { bucket: usedBucket, filename } = await uploadFileToS3(req.file, bucket);

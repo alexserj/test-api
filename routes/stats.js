@@ -16,6 +16,10 @@ async function handleStats(req, res) {
       index = 'dg-fresh-analitycs';
     } else if (origin === 'https://dg-bold.vercel.app') {
       index = 'dg-bolt-analitycs'
+    } else if (origin === 'https://dg-fresh-mobile.vercel.app') {
+      index = 'dg-fresh-mobile-analitycs';
+    } else if (origin === 'https://dg-bold-mobile.vercel.app') {
+      index = 'dg-bold-mobile-analitycs'
     }
 
     const esResponse = await pushToElasticsearch(req.body, index);
