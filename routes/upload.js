@@ -40,7 +40,7 @@ async function handleUpload(req, res) {
       bucket = 'lense-api-libre-bucket';
     } else if (origin === 'https://dg-fresh.vercel.app') {
       bucket = 'lense-api-dg-fresh-bucket';
-    } else if (origin === 'https://dg-bold.vercel.app') {
+    } else if (origin === 'https://dg-bold.vercel.app' || origin === 'https://boldlooksaigenerator.dolcegabbana.com') {
       bucket = 'lense-api-dg-bolt-bucket';
     } else if (origin === 'https://dg-fresh-mobile.vercel.app') {
       bucket = 'lense-api-dg-fresh-mobile-bucket';

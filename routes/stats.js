@@ -14,7 +14,7 @@ async function handleStats(req, res) {
       index = 'libre-analitycs';
     } else if (origin === 'https://dg-fresh.vercel.app') {
       index = 'dg-fresh-analitycs';
-    } else if (origin === 'https://dg-bold.vercel.app') {
+    } else if (origin === 'https://dg-bold.vercel.app' || origin === 'https://boldlooksaigenerator.dolcegabbana.com') {
       index = 'dg-bolt-analitycs'
     } else if (origin === 'https://dg-fresh-mobile.vercel.app') {
       index = 'dg-fresh-mobile-analitycs';
