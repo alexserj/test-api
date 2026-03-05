@@ -34,6 +34,7 @@ async function handleUpload(req, res) {
     // Determine bucket based on origin
     const origin = req.get('origin');
     let bucket = process.env.AWS_S3_BUCKET;
+    let customFilename = undefined;
     if (origin === 'https://test-lake-chi-94.vercel.app' || origin === 'https://test-roan-xi-33.vercel.app') {
       bucket = 'lense-api-bucket';
     } else if (origin === 'https://libre-cyan.vercel.app') {
@@ -42,13 +43,14 @@ async function handleUpload(req, res) {
       bucket = 'lense-api-dg-fresh-bucket';
     } else if (origin === 'https://dg-bold.vercel.app' || origin === 'https://boldlooksaigenerator.dolcegabbana.com') {
       bucket = 'lense-api-dg-bolt-bucket';
+      customFilename = 'DGBeautyBoldLook.jpg';
     } else if (origin === 'https://dg-fresh-mobile.vercel.app') {
       bucket = 'lense-api-dg-fresh-mobile-bucket';
     } else if (origin === 'https://dg-bold-mobile.vercel.app') {
       bucket = 'lense-api-dg-bold-mobile-bucket';
     }
 
-    const { bucket: usedBucket, filename } = await uploadFileToS3(req.file, bucket);
+    const { bucket: usedBucket, filename } = await uploadFileToS3(req.file, bucket, customFilename);
     const signedUrl = await getPresignedUrl(usedBucket, filename, 3600);
     const shortUrl = await shortenUrl(signedUrl);
     res.status(200).json({ link: shortUrl });
