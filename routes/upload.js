@@ -31,23 +31,43 @@ async function handleUpload(req, res) {
     return res.status(400).json({ error: 'No file uploaded' });
   }
   try {
-    // Determine bucket based on origin
+    // Combine X-App-Variant header and origin checks
+    const appVariant = req.get('X-App-Variant');
     const origin = req.get('origin');
     let bucket = process.env.AWS_S3_BUCKET;
     let customFilename = undefined;
-    if (origin === 'https://test-lake-chi-94.vercel.app' || origin === 'https://test-roan-xi-33.vercel.app') {
-      bucket = 'lense-api-bucket';
-    } else if (origin === 'https://libre-cyan.vercel.app') {
-      bucket = 'lense-api-libre-bucket';
-    } else if (origin === 'https://dg-fresh.vercel.app') {
-      bucket = 'lense-api-dg-fresh-bucket';
-    } else if (origin === 'https://dg-bold.vercel.app' || origin === 'https://boldlooksaigenerator.dolcegabbana.com') {
+    // Approved origins for each variant
+    const mainOrigins = [
+      'https://dg-bold.vercel.app',
+      'https://boldlooksaigenerator.dolcegabbana.com'
+    ];
+    const mobileOrigins = [
+      'https://dg-bold-mobile.vercel.app'
+    ];
+    if (appVariant === 'main' && mainOrigins.includes(origin)) {
       bucket = 'lense-api-dg-bolt-bucket';
       customFilename = 'DGBeautyBoldLook.jpg';
-    } else if (origin === 'https://dg-fresh-mobile.vercel.app') {
-      bucket = 'lense-api-dg-fresh-mobile-bucket';
-    } else if (origin === 'https://dg-bold-mobile.vercel.app') {
+    } else if (appVariant === 'mobile' && mobileOrigins.includes(origin)) {
       bucket = 'lense-api-dg-bold-mobile-bucket';
+    } else if (!appVariant) {
+      // fallback to origin logic for legacy support
+      if (origin === 'https://test-lake-chi-94.vercel.app' || origin === 'https://test-roan-xi-33.vercel.app') {
+        bucket = 'lense-api-bucket';
+      } else if (origin === 'https://libre-cyan.vercel.app') {
+        bucket = 'lense-api-libre-bucket';
+      } else if (origin === 'https://dg-fresh.vercel.app') {
+        bucket = 'lense-api-dg-fresh-bucket';
+      } else if (mainOrigins.includes(origin)) {
+        bucket = 'lense-api-dg-bolt-bucket';
+        customFilename = 'DGBeautyBoldLook.jpg';
+      } else if (origin === 'https://dg-fresh-mobile.vercel.app') {
+        bucket = 'lense-api-dg-fresh-mobile-bucket';
+      } else if (mobileOrigins.includes(origin)) {
+        bucket = 'lense-api-dg-bold-mobile-bucket';
+      }
+    } else {
+      // If header is present but origin is not approved, fallback or reject
+      return res.status(403).json({ error: 'Origin not approved for this variant' });
     }
 
     const { bucket: usedBucket, filename } = await uploadFileToS3(req.file, bucket, customFilename);
