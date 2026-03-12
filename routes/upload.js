@@ -11,6 +11,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 // Helper to shorten URLs using is.gd
 async function shortenUrl(longUrl) {
   try {
+    console.log('[is.gd] Attempting to shorten URL:', longUrl);
     const encodedUrl = encodeURIComponent(longUrl);
     const isgdResp = await axios.get(`https://is.gd/create.php?format=simple&url=${encodedUrl}`, {
       timeout: 5000
