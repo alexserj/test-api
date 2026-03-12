@@ -16,12 +16,16 @@ async function shortenUrl(longUrl) {
     const isgdResp = await axios.get(`https://is.gd/create.php?format=simple&url=${encodedUrl}`, {
       timeout: 5000
     });
+    console.log('[is.gd] Response:', isgdResp.data);
     if (typeof isgdResp.data === 'string' && isgdResp.data.startsWith('http')) {
       return isgdResp.data;
     }
+    // Log the full response for debugging
+    console.error('[is.gd] Unexpected response:', isgdResp.data);
     throw new Error('is.gd did not return a valid URL');
   } catch (err) {
     console.error('is.gd error:', err.message);
+    // Optionally, you could try another shortener here
     return longUrl; // Fallback to original URL
   }
 }
