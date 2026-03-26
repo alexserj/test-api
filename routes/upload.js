@@ -43,11 +43,11 @@ async function handleUpload(req, res) {
     let customFilename = undefined;
     // Approved origins for each variant
     const mainOrigins = [
-      'https://dg-bold.vercel.app',
-      'https://boldlooksaigenerator.dolcegabbana.com'
+      'https://dg-bold.vercel.app'
     ];
     const mobileOrigins = [
-      'https://dg-bold-mobile.vercel.app'
+      'https://dg-bold-mobile.vercel.app',
+      'https://boldlooksaigenerator.dolcegabbana.com'
     ];
     if (appVariant === 'main' && mainOrigins.includes(origin)) {
       bucket = 'lense-api-dg-bolt-bucket';

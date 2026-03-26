@@ -11,11 +11,11 @@ async function handleStats(req, res) {
     let index = process.env.ELASTIC_INDEX;
     // Approved origins for each variant
     const mainOrigins = [
-      'https://dg-bold.vercel.app',
-      'https://boldlooksaigenerator.dolcegabbana.com'
+      'https://dg-bold.vercel.app'
     ];
     const mobileOrigins = [
-      'https://dg-bold-mobile.vercel.app'
+      'https://dg-bold-mobile.vercel.app',
+      'https://boldlooksaigenerator.dolcegabbana.com'
     ];
     if (appVariant === 'main' && mainOrigins.includes(origin)) {
       index = 'dg-bolt-analitycs';
