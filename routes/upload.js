@@ -65,7 +65,7 @@ async function handleUpload(req, res) {
       } else if (mainOrigins.includes(origin)) {
         bucket = 'lense-api-dg-bolt-bucket';
         customFilename = 'DGBeautyBoldLook.jpg';
-      } else if (origin === 'https://dg-fresh-mobile.vercel.app') {
+      } else if (origin === 'https://dg-fresh-mobile.vercel.app' || origin === 'https://ailipswardrobe.dolcegabbana.com') {
         bucket = 'lense-api-dg-fresh-mobile-bucket';
       } else if (mobileOrigins.includes(origin)) {
         bucket = 'lense-api-dg-bold-mobile-bucket';

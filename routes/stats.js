@@ -31,7 +31,7 @@ async function handleStats(req, res) {
         index = 'dg-fresh-analitycs';
       } else if (mainOrigins.includes(origin)) {
         index = 'dg-bolt-analitycs';
-      } else if (origin === 'https://dg-fresh-mobile.vercel.app') {
+      } else if (origin === 'https://dg-fresh-mobile.vercel.app' || origin === 'https://ailipswardrobe.dolcegabbana.com') {
         index = 'dg-fresh-mobile-analitycs';
       } else if (mobileOrigins.includes(origin)) {
         index = 'dg-bold-mobile-analitycs';
